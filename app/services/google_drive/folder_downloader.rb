@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GoogleDrive
   class FolderDownloader
     DOWNLOADS_DIR = Rails.root.join('public', 'downloads').freeze
@@ -17,13 +15,20 @@ module GoogleDrive
       write_metadata_file(local_path, parent_metadata) if parent_metadata
 
       response.files.each do |file|
+        local_folder_path = File.join(local_path, file.name)
+
         if file.mime_type == 'application/vnd.google-apps.folder'
+          # Проверка, существует ли уже папка с таким именем
+          if Dir.exist?(local_folder_path)
+            puts "Folder #{file.name} already downloaded. Skipping..."
+            next
+          end
+
           unless @metadata_checker.metadata_count_matches?(file.id)
             puts "Folder #{file.name} skipped, no dataset_metadata.yml found."
             next
           end
 
-          local_folder_path = File.join(local_path, file.name)
           FileUtils.mkdir_p(local_folder_path) unless Dir.exist?(local_folder_path)
           puts "Found folder with metadata: #{file.name}, downloading contents..."
 
