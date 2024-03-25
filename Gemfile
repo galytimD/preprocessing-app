@@ -13,6 +13,10 @@ gem 'sprockets-rails'
 # Use sqlite3 as the database for Active Record
 gem 'rubocop'
 gem 'sidekiq'
+gem 'redis', '~> 5.1.0'
+gem 'sidekiq-scheduler'
+
+
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
 

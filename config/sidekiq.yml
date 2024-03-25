@@ -1,0 +1,6 @@
+:scheduler:
+  :schedule:
+    donwload_from_g_drive_job:
+      every: ['12h', first_in: '0s'] # Запуск каждые 10 секунд, начиная сразу
+      class: DonwloadFromGDriveJob
+      queue: default
