@@ -1,0 +1,67 @@
+<h1>Editing Dataset</h1>
+
+<%= render 'form', dataset: @dataset %>
+
+<h2>Images</h2>
+
+<%= form_with url: batch_destroy_dataset_images_path(@dataset), method: :delete, local: true do %>
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Image Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @dataset.images.each do |image| %>
+        <tr>
+          <td><%= check_box_tag 'image_ids[]', image.id %></td>
+          <td>
+            <%= link_to image.name, "#", id: "openModal#{image.id}" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= submit_tag 'Delete Selected Images', data: { confirm: 'Are you sure you want to delete selected images?' } %>
+<% end %>
+
+<%= link_to 'Show this dataset', @dataset %> |
+<%= link_to 'Back to datasets', datasets_path %>
+
+<% @dataset.images.each do |image| %>
+  <div id="myModal<%= image.id %>" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p><%= image.name %></p>
+      <%= image_tag("/downloads/#{image.path}", width: '100%') %>
+    </div>
+  </div>
+<% end %>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Открытие модального окна
+    document.querySelectorAll('[id^="openModal"]').forEach(trigger => {
+      trigger.addEventListener('click', function(event) {
+        event.stopPropagation(); // Предотвратим всплытие события
+        const modalId = this.id.replace('openModal', 'myModal');
+        document.getElementById(modalId).style.display = 'block';
+      });
+    });
+
+    // Закрытие модального окна при клике на крестик
+    document.querySelectorAll('.close').forEach(closeButton => {
+      closeButton.addEventListener('click', function() {
+        this.closest('.modal').style.display = 'none';
+      });
+    });
+
+    // Закрытие модального окна при клике вне его содержимого
+    window.addEventListener('click', function(event) {
+      if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+      }
+    });
+  });
+</script>

@@ -1,0 +1,36 @@
+
+ <%= link_to 'Скачать датасеты', download_datasets_datasets_path, method: :get, class: 'btn btn-primary' %> 
+
+<% if @datasets.exists? %>
+  <h1>Datasets</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quality</th>
+        <th>Status</th>
+        <th>Owner</th>
+        <th>Created at</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+      <% @datasets.each do |dataset| %>
+        <tr>
+          <td><%= link_to dataset.name, dataset_path(dataset) %></td>
+          <td><%= I18n.t("enums.dataset.quality_status.#{dataset.quality_status}") %></td>
+          <td><%= I18n.t("enums.dataset.status.#{dataset.status}") %></td>
+          <td><%= dataset.owner %></td>
+          <td><%= dataset.createTime.present? ? l(dataset.createTime, format: :short) : 'Not available' %></td>
+
+          <td><%= link_to 'Edit', edit_dataset_path(dataset), class: 'btn btn-primary' ,style:"color:blue" %></td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+<% else %>
+    <h1>тут пока нет ни одного датасета</h1>
+  
+<%end%>

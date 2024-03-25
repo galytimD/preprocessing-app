@@ -1,0 +1,21 @@
+ru:
+  enums:
+    dataset:
+      status:
+        unprocessed: "Необработанный"
+        data_engineered: "Обработан инженером"
+        preprocessed: "Предобработанный"
+        ready: "Готов к использованию"
+        
+      quality_status:
+        not_evaluated: "Не проверен"
+        excellent: "Отличное"
+        good: "Хорошее"
+        fair: "Удовлетворительное"
+        poor: "Плохое"
+  time:
+    formats:
+      short: "%d.%m.%Y %H:%M"
+  date:
+    formats:
+      short: "%d.%m.%Y"

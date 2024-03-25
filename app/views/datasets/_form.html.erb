@@ -1,0 +1,11 @@
+<%= form_for @dataset do |f| %>
+
+  <div class="field">
+    <%= f.label :status %><br>
+    <%= f.select :status, Dataset.statuses.keys.map { |status| [status.humanize, status] }, { include_blank: 'unprocessed' } %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Save Changes" %>
+  </div>
+<% end %>

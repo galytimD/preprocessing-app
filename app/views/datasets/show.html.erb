@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @dataset %>
+
+<%= form_with url: batch_destroy_dataset_images_path(@dataset), method: :delete do %>
+  <% @dataset.images.each do |image| %>
+    <div>
+      <%= label_tag "image_#{image.id}" do %>
+        <%= image_tag("/downloads/#{image.path}", style: "width:160px; height:160px;") %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<div>
+  <%= link_to "Edit this dataset", edit_dataset_path(@dataset) %> |
+  <%= link_to "Back to datasets", datasets_path %> |
+  <%= button_to "Destroy this dataset", @dataset, method: :delete, data: { confirm: "Are you sure you want to delete this dataset?" } %>
+</div>
