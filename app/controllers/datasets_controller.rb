@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DatasetsController < ApplicationController
-  before_action :set_dataset, only: %i[show edit update destroy]
+  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :preprocessing, :update_preprocessing]
   def index
     @datasets = Dataset.all
   end
@@ -14,8 +14,6 @@ class DatasetsController < ApplicationController
     DatasetCreator.new.create_dataset
     redirect_to datasets_path
   end
-
-  def preprocessing; end
 
   def edit; end
 
@@ -38,7 +36,30 @@ class DatasetsController < ApplicationController
     end
   end
 
+  def update_preprocessing
+    if @dataset.update(preprocessing_params)
+      # Вызов сервиса для обработки изображений
+      process_images
+      render :edit, notice: 'Параметры предобработки успешно обновлены, изображения обработаны.'
+    else
+      render :preprocessing
+    end
+  end
+
+
+
   private
+
+  def preprocessing_params
+    params.require(:dataset).permit(:normalize, :gamma, :median_filter, :color_space, :resize, :rotate, :sharpen, :threshold)
+  end
+
+  def process_images
+    options = preprocessing_params.to_h.symbolize_keys
+    preprocessor = ImagePreprocessor.new(@dataset, options)
+    preprocessor.process
+  end
+
 
   def set_dataset
     @dataset = Dataset.find(params[:id])
@@ -46,5 +67,8 @@ class DatasetsController < ApplicationController
 
   def dataset_params
     params.require(:dataset).permit(:name, :data, :status)
+  end
+  def preprocessing_params
+    params.require(:dataset).permit(:normalize, :gamma, :median_filter, :resize, :rotate, :sharpen, :threshold)
   end
 end

@@ -15,4 +15,15 @@ class Dataset < ApplicationRecord
     fair: 3,
     poor: 4
   }
+  def preprocessing_params
+    {
+      normalize: normalize,
+      gamma: gamma,
+      median_filter: median_filter,
+      resize: resize,
+      rotate: rotate,
+      sharpen: sharpen,
+      threshold: threshold
+    }
+  end
 end

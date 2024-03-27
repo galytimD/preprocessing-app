@@ -2,19 +2,21 @@
 
 class DatasetCreator
   def create_dataset
-    dataset_path = Rails.root.join('public', 'downloads')
-
-    FolderParser.folder_names(dataset_path).each do |folder_name|
-      metadata_path = File.join(dataset_path, folder_name, 'folder_metadata.yml')
+    dataset_base_path = Rails.root.join('public', 'downloads')
+  
+    FolderParser.folder_names(dataset_base_path).each do |folder_name|
+      metadata_path = File.join(dataset_base_path, folder_name, 'folder_metadata.yml')
       next unless File.exist?(metadata_path) # Пропускаем папки без метаданных
-
+  
       metadata = YAML.load_file(metadata_path) || {}
+      dataset_path = File.join('downloads', folder_name) # Относительный путь для использования в web-контексте
       dataset = Dataset.find_or_create_by(name: folder_name) do |ds|
+        ds.images_path = dataset_path
         ds.owner = metadata['Owners']
         ds.createTime = metadata['Created Time']
       end
-
-      create_images(File.join(dataset_path, folder_name), dataset)
+  
+      create_images(File.join(dataset_base_path, folder_name), dataset)
       puts "Dataset created with name: #{folder_name}, owner: #{metadata['Owners']}, created at: #{metadata['Created Time']}"
     end
   end

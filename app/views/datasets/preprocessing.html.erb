@@ -1,0 +1,46 @@
+<!-- app/views/datasets/preprocessing.html.erb -->
+<h1>Настройка предобработки изображений</h1>
+
+<% if @first_image_url %>
+  <img src="<%= @first_image_url %>" alt="Первое изображение датасета" />
+<% end %>
+
+<%= form_for @dataset, url: update_preprocessing_dataset_path(@dataset) do |f| %>
+  <div>
+    <%= f.label :normalize, "Нормализация" %>
+    <%= f.check_box :normalize %>
+    <p class="help-block">Включить или выключить нормализацию.</p>
+  </div>
+  <div>
+    <%= f.label :gamma, "Гамма-коррекция" %>
+    <%= f.number_field :gamma, step: 'any', min: 0 %>
+    <p class="help-block">Значение гаммы (вещественное число, больше 0).</p>
+  </div>
+  <div>
+    <%= f.label :median_filter, "Медианный фильтр" %>
+    <%= f.number_field :median_filter, min: 0 %>
+    <p class="help-block">Размер медианного фильтра (целое число, 0 для отключения).</p>
+  </div>
+  <div>
+    <%= f.label :resize, "Изменение размера" %>
+    <%= f.text_field :resize %>
+    <p class="help-block">Новые размеры, например '100x100>'.</p>
+  </div>
+  <div>
+    <%= f.label :rotate, "Поворот" %>
+    <%= f.number_field :rotate, min: -360, max: 360 %>
+    <p class="help-block">Угол поворота от -360 до 360 градусов.</p>
+  </div>
+  <div>
+    <%= f.label :sharpen, "Увеличение резкости" %>
+    <%= f.number_field :sharpen, min: 0 %>
+    <p class="help-block">Степень увеличения резкости (0 для отключения).</p>
+  </div>
+  <div>
+    <%= f.label :threshold, "Бинаризация" %>
+    <%= f.number_field :threshold, step: 'any', min: 0, max: 100 %>
+    <p class="help-block">Порог бинаризации от 0 до 100%.</p>
+  </div>
+  <%= f.submit "Применить" %>
+
+<% end %>

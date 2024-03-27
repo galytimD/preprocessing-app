@@ -23,6 +23,7 @@
       <% end %>
     </tbody>
   </table>
+  <%= link_to 'Настройка предобработки изображений', preprocessing_dataset_path(id: @dataset.id), class: 'btn btn-primary' %>
 
   <%= submit_tag 'Delete Selected Images', data: { confirm: 'Are you sure you want to delete selected images?' } %>
 <% end %>
@@ -35,7 +36,7 @@
     <div class="modal-content">
       <span class="close">&times;</span>
       <p><%= image.name %></p>
-      <%= image_tag("/downloads/#{image.path}", width: '100%') %>
+      <%= image_tag("/#{@dataset.images_path}/#{image.name}", width: '100%') %>
     </div>
   </div>
 <% end %>

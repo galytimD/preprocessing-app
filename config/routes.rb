@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   resources :datasets, except: %i[new create] do
     collection do
       get :download_datasets
+    end
+    member do
       get :preprocessing
+      patch :update_preprocessing
     end
     resources :images, only: [] do
       collection do
