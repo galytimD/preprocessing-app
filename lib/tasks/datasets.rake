@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-namespace :datasets do
+namespace :ds do
   desc 'Create dataset records from folder names, setting owner and creation time from metadata.yaml'
-  task create_from_folders: :environment do
+  task create: :environment do
     DatasetCreator.new.create_dataset
   end
 
-  task delete_datasets_from_db: :environment do
+  task delete: :environment do
     dataset_path = Rails.root.join('public', 'downloads')
     folder_names = FolderParser.folder_names(dataset_path)
 
@@ -24,8 +24,18 @@ namespace :datasets do
     Dir.children(images_path).each do |image_name|
       next if image_name.downcase.end_with?('.yaml', '.yml', '.txt')
 
-      path_to_image = File.join(dataset.name, image_name)
-      Image.find_or_create_by(name: image_name, dataset_id: dataset.id, path: path_to_image)
+      path_to_image = File.join(images_path, dataset.name, image_name)
+      full_image_path = File.join(images_path, image_name) # Полный путь к изображению для извлечения метаданных
+
+      # Использование сервиса для извлечения метаданных
+      metadata = ImageMetadataExtractor.extract(full_image_path)
+
+      # Находим или создаем новую запись в базе данных с этими метаданными
+      Image.find_or_create_by(name: image_name, dataset_id: dataset.id, path: path_to_image) do |image|
+        image.coordinates = metadata[:coordinates]
+        image.resolution = metadata[:resolution]
+        image.orientation = metadata[:orientation]
+      end
     end
   end
 end

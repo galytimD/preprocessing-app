@@ -9,9 +9,9 @@ class FolderDownloaderService
   def self.download_datasets
     drive_api = GoogleDrive::Api.new
     metadata_checker = GoogleDrive::MetadataPresenceChecker.new(drive_api)
-    folder_downloader = GoogleDrive::FolderDownloader.new(drive_api, metadata_checker)
+    folder_downloader = GoogleDrive::FolderDownloader.new(drive_api)
 
-    folder_id = Rails.application.credentials.dig(:google_drive, :folder_id)
+    folder_id = Rails.application.credentials.dig(:google_drive, :dataset_folder_id)
     raise ArgumentError, 'Folder ID is not configured in credentials' unless folder_id
 
     puts "Fetching files from folder #{folder_id}..."

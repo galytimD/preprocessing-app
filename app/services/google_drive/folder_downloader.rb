@@ -2,9 +2,8 @@ module GoogleDrive
   class FolderDownloader
     DOWNLOADS_DIR = Rails.root.join('public', 'downloads').freeze
 
-    def initialize(drive_api, metadata_checker)
+    def initialize(drive_api)
       @drive_api = drive_api
-      @metadata_checker = metadata_checker
     end
 
     def download_folder(folder_id, local_path = DOWNLOADS_DIR, parent_metadata = nil)
@@ -15,22 +14,24 @@ module GoogleDrive
       write_metadata_file(local_path, parent_metadata) if parent_metadata
 
       response.files.each do |file|
-        local_folder_path = File.join(local_path, file.name)
-
+        local_folder_path = File.join(local_path, "dataset_#{file.created_time&.to_s}")
+        if Dir.exist?(local_folder_path)
+                  puts "Folder #{file.name} already downloaded. Skipping..."
+                  next
+        end
         if file.mime_type == 'application/vnd.google-apps.folder'
+          # Проверка, содержит ли папка файлы или другие папки
+          folder_contents_query = "'#{file.id}' in parents"
+          folder_contents_response = @drive_api.list_files(folder_contents_query, fields)
+
+          if folder_contents_response.files.empty?
+            puts "Folder #{file.name} is empty. Skipping..."
+            next
+          end
+          
           # Проверка, существует ли уже папка с таким именем
-          if Dir.exist?(local_folder_path)
-            puts "Folder #{file.name} already downloaded. Skipping..."
-            next
-          end
-
-          unless @metadata_checker.metadata_count_matches?(file.id)
-            puts "Folder #{file.name} skipped, no dataset_metadata.yml found."
-            next
-          end
-
           FileUtils.mkdir_p(local_folder_path) unless Dir.exist?(local_folder_path)
-          puts "Found folder with metadata: #{file.name}, downloading contents..."
+          puts "Found folder: #{file.name}, downloading contents..."
 
           folder_metadata = parent_metadata.nil? ? extract_metadata(file) : nil
           download_folder(file.id, local_folder_path, folder_metadata)
@@ -39,6 +40,7 @@ module GoogleDrive
         end
       end
     end
+
 
     private
 
@@ -56,7 +58,7 @@ module GoogleDrive
 
     def extract_metadata(file)
       {
-        'Name' => file.name,
+        'Name' => "dataset_#{file.created_time&.to_s}",
         'Created Time' => file.created_time&.to_s,
         'Modified Time' => file.modified_time&.to_s,
         'Owners' => file.owners&.map(&:email_address)&.join(', ') || 'Unknown Owner'

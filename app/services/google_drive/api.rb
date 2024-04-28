@@ -38,4 +38,4 @@ module GoogleDrive
     end
   end
 end
-"1l-LwufMiTZUof8C_sRxxXq8dTOPNXNe7"#Rails.application.credentials.dig(:google_drive, :folder_id)
+
