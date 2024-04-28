@@ -4,9 +4,12 @@ class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy, :preprocessing, :update_preprocessing]
   def index
     @datasets = Dataset.all
+    render json: @datasets
   end
 
-  def show; end
+  def show
+    render json: @dataset.images
+  end
 
   def download_datasets
     flash[:notice] = 'Скачивание датасетов инициировано.'

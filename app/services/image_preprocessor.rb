@@ -22,9 +22,9 @@ class ImagePreprocessor
   def process_image(image_path)
     puts "Processing image: #{image_path}"
     image = MiniMagick::Image.open(image_path)
-    image  = normalize_pixels(image) if @options[:normalize]
-    image  = adjust_gamma(image) if @options[:gamma]
-    image  = apply_median_filter(image) if @options[:median_filter]
+    #image  = normalize_pixels(image) if @options[:normalize]
+    #image  = adjust_gamma(image) if @options[:gamma]
+    #image  = apply_median_filter(image) if @options[:median_filter]
     image  = resize_image(image) if @options[:resize]
     image  = rotate_image(image) if @options[:rotate]
     image  = sharpen_image(image) if @options[:sharpen]

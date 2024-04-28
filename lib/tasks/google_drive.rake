@@ -5,4 +5,8 @@ namespace :google_drive do
   task download_files: :environment do
     FolderDownloaderService.download_datasets
   end
+  task upload_folder_contents: :environment do
+    FolderUploaderService.upload_folder_contents
+  end
+
 end
