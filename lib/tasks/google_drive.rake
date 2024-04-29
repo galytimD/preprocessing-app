@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-namespace :google_drive do
+namespace :gd do
   desc 'Download all files from the specified Google Drive folder stored in credentials'
-  task download_files: :environment do
+  task download: :environment do
     FolderDownloaderService.download_datasets
   end
   task upload_folder_contents: :environment do

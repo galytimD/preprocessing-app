@@ -24,21 +24,24 @@ class DatasetCreator
   private
 
   def create_images(images_path, dataset)
-    Dir.children(images_path).each do |image_name|
+    image_data = Dir.children(images_path).filter_map do |image_name|
       next if image_name.downcase.end_with?('.yaml', '.yml', '.txt')
-
-      path_to_image = File.join(images_path, dataset.name, image_name)
-      full_image_path = File.join(images_path, image_name) # Полный путь к изображению для извлечения метаданных
-
-      # Использование сервиса для извлечения метаданных
-      metadata = ImageMetadataExtractor.extract(full_image_path)
-
-      # Находим или создаем новую запись в базе данных с этими метаданными
-      Image.find_or_create_by(name: image_name, dataset_id: dataset.id, path: path_to_image) do |image|
-        image.coordinates = metadata[:coordinates]
-        image.resolution = metadata[:resolution]
-        image.orientation = metadata[:orientation]
-      end
+  
+      path_to_image = File.join(dataset.images_path, image_name)
+      full_image_path = File.join(images_path, image_name)
+      metadata = Images::ImageMetadataExtractor.extract(full_image_path)
+  
+      {
+        name: image_name,
+        dataset_id: dataset.id,
+        path: path_to_image,
+        coordinates: metadata[:coordinates],
+        resolution: metadata[:resolution],
+        orientation: metadata[:orientation]
+      }
     end
+  
+    Image.upsert_all(image_data, unique_by: :index_images_on_name_and_dataset_id)
   end
+  
 end
