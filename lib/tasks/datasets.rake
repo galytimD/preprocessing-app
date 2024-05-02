@@ -17,6 +17,12 @@ namespace :ds do
       end
     end
   end
+    desc "Delete datasets with zero images"
+    task delete_without_images: :environment do
+      Dataset.includes(:images).where(images: { id: nil }).destroy_all
+      puts "Datasets with zero images have been deleted."
+    end
+  
 
   private
 

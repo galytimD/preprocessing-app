@@ -4,11 +4,19 @@ class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy, :preprocessing, :update_preprocessing]
   def index
     @datasets = Dataset.all
-    render json: @datasets
+    datasets_with_image_count = []
+  
+    @datasets.each do |dataset|
+      dataset_info = dataset.as_json(only: [:id, :name, :status, :quality_status, :createTime])
+      dataset_info[:imageCount] = dataset.images.count
+      datasets_with_image_count << dataset_info
+    end
+  
+    render json: datasets_with_image_count
   end
 
   def show
-    render json: @dataset.images
+    render :json => @dataset.images.to_json( :except => [:updated_at]) 
   end
 
   def download_datasets
@@ -47,6 +55,9 @@ class DatasetsController < ApplicationController
     else
       render :preprocessing
     end
+  end
+  def preproccessing_one
+  
   end
 
 

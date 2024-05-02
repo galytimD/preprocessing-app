@@ -8,7 +8,9 @@ class ImagesController < ApplicationController
 
   def destroy
     @image.destroy
+    @dataset.destroy if @dataset.images.empty?
     render json: {message: 'Delete success'}
+
   end
 
   def batch_destroy
