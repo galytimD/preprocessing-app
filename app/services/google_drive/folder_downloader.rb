@@ -43,7 +43,7 @@ module GoogleDrive
       FileUtils.mkdir_p(directory_path) unless Dir.exist?(directory_path)
     
       # Формирование корректного пути файла
-      destination_path = File.join(directory_path, "#{file.name}.jpg")  # Убедитесь, что имя файла формируется корректно
+      destination_path = File.join(directory_path, "#{file.name}")  # Убедитесь, что имя файла формируется корректно
     
       puts "Downloading file: #{file.name} to #{destination_path}..."
       @drive_api.download_file(file.id, destination_path)

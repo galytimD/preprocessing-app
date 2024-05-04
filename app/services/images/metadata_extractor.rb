@@ -1,6 +1,6 @@
 require 'exifr/jpeg'
 module Images
-  class ImageMetadataExtractor
+  class MetadataExtractor
     def self.extract(image_path)
       jpeg = EXIFR::JPEG.new(image_path)
 

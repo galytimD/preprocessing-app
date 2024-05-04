@@ -26,11 +26,12 @@ class DatasetCreator
   def create_images(images_path, dataset)
     image_data = Dir.children(images_path).filter_map do |image_name|
       next if image_name.downcase.end_with?('.yaml', '.yml', '.txt')
-  
       path_to_image = File.join(dataset.images_path, image_name)
       full_image_path = File.join(images_path, image_name)
-      metadata = Images::ImageMetadataExtractor.extract(full_image_path)
+      metadata = Images::MetadataExtractor.extract(full_image_path)
   
+      # Разбиваем имя файла на части по точке
+      
       {
         name: image_name,
         dataset_id: dataset.id,
@@ -43,5 +44,6 @@ class DatasetCreator
   
     Image.upsert_all(image_data, unique_by: :index_images_on_name_and_dataset_id)
   end
+  
   
 end

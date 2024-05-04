@@ -7,13 +7,13 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   get "/downloads/*path", to: redirect("/downloads/%{path}")
   get 'images/coordinates', to: 'images#coordinates'
-  resources :datasets, except: %i[new create] do
+  resources :datasets, except: %i[new create edit] do
     collection do
-      get :download_datasets
+      get :download
     end
     member do
-      get :preprocessing
-      patch :update_preprocessing
+      patch :preproccessing_all
+      post :preproccessing_one
     end
     resources :images, only: [:destroy] do
       collection do
