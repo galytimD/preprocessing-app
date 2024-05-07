@@ -1,4 +1,4 @@
 class ImageSerializer < ActiveModel::Serializer
-  attributes :id, :name, :coordinates, :resolution, :orientation
+  attributes :id, :name, :coordinates,:path, :resolution, :orientation
   
 end

@@ -18,10 +18,14 @@ class ImagesController < ApplicationController
     redirect_to edit_dataset_path(@dataset), notice: 'Выбранные изображения были успешно удалены.'
   end
   def coordinates
-    images = Image.where.not(coordinates: [nil, ""]).distinct.pluck(:id, :coordinates)
-    unique_coordinates = images.to_h
-    render json: unique_coordinates
+    images = Image.where.not(coordinates: [nil, ""]).distinct
+  
+    result = images.map do |image|
+      { id: image.id, coordinates: image.coordinates.split(",").map(&:to_f) }
+    end
+    render json: result
   end
+  
 
 
 
