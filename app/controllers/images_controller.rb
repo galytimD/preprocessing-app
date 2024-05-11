@@ -1,45 +1,45 @@
 # frozen_string_literal: true
 
 class ImagesController < ApplicationController
-  protect_from_forgery with: :null_session
+  
 
-  before_action :set_dataset, except: :coordinates
+  before_action :set_dataset, only: [:destroy, :batch_destroy]
   before_action :set_image, only: [:destroy]
 
   def destroy
     @image.destroy
     @dataset.destroy if @dataset.images.empty?
-    render json: {message: 'Delete success'}
+    render json: { message: 'Delete success' }
+  end
 
+  def count_preproccessed
+    render json: { count: Image.count }
   end
 
   def batch_destroy
-    Images::RemovalService.new(Image.where(id: params[:image_ids])).call if params[:image_ids].present?
-    redirect_to edit_dataset_path(@dataset), notice: 'Выбранные изображения были успешно удалены.'
+    if params[:image_ids].present?
+      Images::RemovalService.new(Image.where(id: params[:image_ids])).call
+      render json: { message: 'Images successfully deleted.' }
+    else
+      render json: { message: 'No images to delete.' }, status: :unprocessable_entity
+    end
   end
+
   def coordinates
     images = Image.where.not(coordinates: [nil, ""]).distinct
-  
-    result = images.map do |image|
-      { id: image.id, coordinates: image.coordinates.split(",").map(&:to_f) }
-    end
+    result = images.map { |image| { id: image.id, coordinates: image.coordinates.split(",").map(&:to_f) } }
     render json: result
   end
-  
-
-
 
   private
 
   def set_dataset
-    @dataset = Dataset.find(params[:dataset_id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to datasets_path, alert: 'Датасет не найден.'
+    @dataset = Dataset.find_by(id: params[:dataset_id])
+    render json: { alert: 'Dataset not found.' }, status: :not_found unless @dataset
   end
 
   def set_image
-    @image = @dataset.images.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to edit_dataset_path(@dataset), alert: 'Изображение не найдено.'
+    @image = @dataset.images.find_by(id: params[:id])
+    render json: { alert: 'Image not found.' }, status: :not_found unless @image
   end
 end

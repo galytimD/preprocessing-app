@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_28_165842) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_10_224055) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,13 +22,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_28_165842) do
     t.integer "quality_status", default: 0
     t.string "owner"
     t.datetime "createTime"
-    t.boolean "normalize", default: false
-    t.string "gamma"
-    t.string "median_filter"
-    t.string "resize"
-    t.string "rotate"
-    t.string "sharpen"
-    t.string "threshold"
     t.string "images_path", default: "", null: false
     t.index ["name"], name: "index_datasets_on_name", unique: true
   end
@@ -42,6 +35,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_28_165842) do
     t.string "coordinates"
     t.string "resolution"
     t.string "orientation"
+    t.boolean "uploaded", default: false
     t.index ["dataset_id"], name: "index_images_on_dataset_id"
     t.index ["name", "dataset_id"], name: "index_images_on_name_and_dataset_id", unique: true
   end

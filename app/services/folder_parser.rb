@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class FolderParser
   def self.folder_names(dataset_path)
     Dir.children(dataset_path).select do |entry|

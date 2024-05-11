@@ -5,7 +5,8 @@ namespace :gd do
   task download: :environment do
     FolderDownloaderService.download_datasets
   end
-  task upload_folder_contents: :environment do
+
+  task upload: :environment do
     FolderUploaderService.upload_folder_contents
   end
 

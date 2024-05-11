@@ -6,7 +6,7 @@ action_mailbox:install:migrations
 action_text:install
 action_text:install:migrations
 active_storage:install
-all:run_in_order
+all:run
 app:template
 app:update
 assets:clean[keep]

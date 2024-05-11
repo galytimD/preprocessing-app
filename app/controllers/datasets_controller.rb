@@ -1,5 +1,4 @@
 class DatasetsController < ApplicationController
-  protect_from_forgery with: :null_session
   before_action :set_dataset, only: [:show, :update, :destroy, :preprocessing_one, :preprocessing_all]
 
   def index
@@ -16,6 +15,10 @@ class DatasetsController < ApplicationController
     render json: { message: "Датасеты загружены" }
   end
 
+  def upload
+    UploadFolderJob.perform_later(upload_params)
+    render json: { message: "Upload started in background." }
+  end
   def update
     if @dataset.update(dataset_params)
       render json: { message: 'Dataset was successfully updated.' }
@@ -52,7 +55,9 @@ class DatasetsController < ApplicationController
   def preprocessing_params
     params.require(:dataset).permit(:normalize, :resize)
   end
-
+  def upload_params
+    params[:project_name]
+  end
   def options
     preprocessing_params.to_h.symbolize_keys
   end
