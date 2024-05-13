@@ -1,6 +1,6 @@
 class DatasetsController < ApplicationController
-  before_action :set_dataset, only: [:show, :update, :destroy, :preprocessing_one, :preprocessing_all]
-
+  before_action :set_dataset, only: [:show, :update, :destroy]
+  
   def index
     render json: Dataset.all
   end
@@ -17,8 +17,9 @@ class DatasetsController < ApplicationController
 
   def upload
     UploadFolderJob.perform_later(upload_params)
-    render json: { message: "Upload started in background." }
+    render json: { message: upload_params }
   end
+
   def update
     if @dataset.update(dataset_params)
       render json: { message: 'Dataset was successfully updated.' }
@@ -32,33 +33,28 @@ class DatasetsController < ApplicationController
     render json: { message: 'Dataset was successfully destroyed.' }
   end
 
-  def preprocessing_all
-    Images::Preprocessor.new(@dataset, options).all
-    render json: { message: "Все фото обработаны" }
-  end
+  def preprocessing
 
-  def preprocessing_one
-    Images::Preprocessor.new(@dataset, options).one
-    render json: { message: "Одно фото обработано" }
+    ImagePreprocessingJob.perform_later(preprocessing_params)
+    render json: {message: preprocessing_params }
+
   end
 
   private
-
-  def set_dataset
-    @dataset = Dataset.find(params[:id])
-  end
 
   def dataset_params
     params.require(:dataset).permit(:name, :data, :status)
   end
 
+  def set_dataset
+    @dataset = Dataset.find(params[:id])
+  end
+
   def preprocessing_params
-    params.require(:dataset).permit(:normalize, :resize)
+    params.permit(:width,:height,:rotate,:zoom,:mirror,:dataset_id)
   end
+
   def upload_params
-    params[:project_name]
-  end
-  def options
-    preprocessing_params.to_h.symbolize_keys
+    params.permit(:project_name)
   end
 end

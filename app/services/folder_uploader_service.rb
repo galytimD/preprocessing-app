@@ -21,7 +21,6 @@ class FolderUploaderService
     end
     drive_service = @drive_api.drive_service
     folder_datasets_id = Rails.application.credentials.dig(:google_drive, :folder_datasets_id)
-    #project_name = "AnotherProjectName"
   
     raise ArgumentError, 'Datasets folder ID is not configured in credentials' unless folder_datasets_id
   
