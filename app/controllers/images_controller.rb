@@ -8,6 +8,8 @@ class ImagesController < ApplicationController
 
   def destroy
     @image.destroy
+    @dataset.status = "data_engineered"
+    @dataset.save
     @dataset.destroy if @dataset.images.empty?
     render json: { message: 'Delete success' }
   end

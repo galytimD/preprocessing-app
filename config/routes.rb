@@ -14,7 +14,12 @@ Rails.application.routes.draw do
       get :download
       post :upload
       post :preprocessing
+      get :preprocessed
     end
+    member do
+      
+    end
+
     resources :images, only: [:destroy] do
       collection do
         delete 'batch_destroy'

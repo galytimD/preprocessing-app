@@ -6,7 +6,11 @@ class DatasetsController < ApplicationController
   end
   
   def show
-    render json: @dataset.images
+    render json: @dataset.images.where(preprocessed: false)
+  end
+
+  def preprocessed
+    render json: Image.where(preprocessed: true).where(uploaded: false)
   end
 
   def download

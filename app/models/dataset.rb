@@ -5,8 +5,7 @@ class Dataset < ApplicationRecord
   enum status: {
     unprocessed: 0,
     data_engineered: 1,
-    preprocessed: 2,
-    ready: 3
+    ready: 2
   }
   enum quality_status: {
     not_evaluated: 0,

@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_10_224055) do
 
   create_table "images", force: :cascade do |t|
     t.string "name"
-    t.bigint "dataset_id", null: false
+    t.integer "dataset_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "path"
@@ -36,6 +36,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_10_224055) do
     t.string "resolution"
     t.string "orientation"
     t.boolean "uploaded", default: false
+    t.boolean "preprocessed", default: false
     t.index ["dataset_id"], name: "index_images_on_dataset_id"
     t.index ["name", "dataset_id"], name: "index_images_on_name_and_dataset_id", unique: true
   end
