@@ -108,6 +108,7 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     declarative (0.0.20)
+    domain_name (0.6.20240107)
     drb (2.2.1)
     erubi (1.12.0)
     et-orbi (1.2.11)
@@ -151,6 +152,9 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
+    http-accept (1.7.0)
+    http-cookie (1.0.6)
+      domain_name (~> 0.5)
     httpclient (2.8.3)
     i18n (1.14.4)
       concurrent-ruby (~> 1.0)
@@ -180,6 +184,12 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
+    mime-types (3.5.2)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2024.0604)
+    mimemagic (0.4.3)
+      nokogiri (~> 1)
+      rake
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     minitest (5.22.3)
@@ -197,6 +207,7 @@ GEM
       timeout
     net-smtp (0.4.0.1)
       net-protocol
+    netrc (0.11.0)
     nio4r (2.7.1)
     nokogiri (1.16.3-aarch64-linux)
       racc (~> 1.4)
@@ -277,6 +288,11 @@ GEM
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     retriable (3.1.2)
     rexml (3.2.6)
     rubocop (1.62.1)
@@ -370,12 +386,14 @@ DEPENDENCIES
   googleauth
   importmap-rails
   jbuilder
+  mimemagic
   mini_magick
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
   rails (~> 7.1.2)
   redis (~> 5.1.0)
+  rest-client
   rubocop
   selenium-webdriver
   sidekiq

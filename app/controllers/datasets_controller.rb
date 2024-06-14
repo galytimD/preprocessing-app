@@ -24,6 +24,11 @@ class DatasetsController < ApplicationController
     render json: { message: upload_params }
   end
 
+  def predict
+    results = MlApi::Predictor.send_images
+    render json: results
+  end
+
   def update
     if @dataset.update(dataset_params)
       render json: { message: 'Dataset was successfully updated.' }

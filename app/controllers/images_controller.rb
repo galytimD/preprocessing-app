@@ -28,11 +28,17 @@ class ImagesController < ApplicationController
   end
 
   def coordinates
-    images = Image.where.not(coordinates: [nil, ""]).distinct
-    result = images.map { |image| { id: image.id, coordinates: image.coordinates.split(",").map(&:to_f) } }
+    # images = Image.where.not(coordinates: [nil, ""]).distinct
+    # result = images.map { |image| { id: image.id, coordinates: image.coordinates.split(",").map(&:to_f) } }
+    # render json: result
+    #result = Dataset.generate_vineyard_data
+    result = Dataset.fake_data
+    #Dataset.save_vineyard_data_to_file("fake_data.json",result)
     render json: result
+    
+    
   end
-
+  
   private
 
   def set_dataset
